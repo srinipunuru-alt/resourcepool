@@ -7,16 +7,17 @@ using System.Threading.Tasks;
 namespace LearnBig
 {
     /// <summary>ResourcePool class</summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">Type of the resource that needs to be managed</typeparam>
     public class ResourcePool<T>
     {
-        /// <summary>MaxResourcePoolLength data member</summary>
+        /// <summary>MaxResourcePoolLength, This is a naive limit mechanism, This 
+        /// can be made more sophisticated based on the actual memory usage.</summary>
         private const int MaxResourcePoolLength = 10000;
 
-        /// <summary>availableResources data member</summary>
+        /// <summary>The resources that are still available in the pool.</summary>
         private Queue<T> availableResources;
 
-        /// <summary>reservedResources data member</summary>
+        /// <summary>The resources that are already reserved.</summary>
         private HashSet<T> reservedResources = new HashSet<T>();
 
         /// <summary>Dummy object that is used to ensure 
@@ -24,7 +25,7 @@ namespace LearnBig
         private object releaseResourceLock = new object();
 
         /// <summary>Initializes a new instance of the ResourcePool{T} class</summary>
-        /// <param name="resources">resources to use</param>
+        /// <param name="resources">resources that needs to be managed</param>
         public ResourcePool(T[] resources)
         {
             if(resources == null)
@@ -45,8 +46,8 @@ namespace LearnBig
             this.availableResources = new Queue<T>(resources);            
         }
 
-        /// <summary>Gets the resource</summary>
-        /// <returns>resulting value</returns>
+        /// <summary>Gets the next available resource</summary>
+        /// <returns>The resource that is made available to the client.</returns>
         public T GetResource()
         {          
             if(this.availableResources.Count == 0)
@@ -59,8 +60,8 @@ namespace LearnBig
             return dequeuedResource;
         }
 
-        /// <summary>Releases the resource</summary>
-        /// <param name="resource">resource to use</param>
+        /// <summary>Releases the resource back to the pool</summary>
+        /// <param name="resource">resource to be released</param>
         public void ReleaseResource(T resource)
         {
             if(resource == null)
