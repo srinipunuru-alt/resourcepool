@@ -15,14 +15,14 @@ namespace LearnBig
         private const int MaxResourcePoolLength = 10000;
 
         /// <summary>The resources that are still available in the pool.</summary>
-        private Queue<T> availableResources;
+        protected Queue<T> availableResources;
 
         /// <summary>The resources that are already reserved.</summary>
-        private HashSet<T> reservedResources = new HashSet<T>();
+        protected HashSet<T> reservedResources = new HashSet<T>();
 
         /// <summary>Dummy object that is used to ensure 
         /// releaseResourceLock executes exclusively.</summary>
-        private object releaseResourceLock = new object();
+        protected object releaseResourceLock = new object();
 
         /// <summary>Initializes a new instance of the ResourcePool{T} class</summary>
         /// <param name="resources">resources that needs to be managed</param>
@@ -48,7 +48,7 @@ namespace LearnBig
 
         /// <summary>Gets the next available resource</summary>
         /// <returns>The resource that is made available to the client.</returns>
-        public T GetResource()
+        public virtual T GetResource()
         {          
             if(this.availableResources.Count == 0)
             {
@@ -62,7 +62,7 @@ namespace LearnBig
 
         /// <summary>Releases the resource back to the pool</summary>
         /// <param name="resource">resource to be released</param>
-        public void ReleaseResource(T resource)
+        public virtual void ReleaseResource(T resource)
         {
             if(resource == null)
             {
